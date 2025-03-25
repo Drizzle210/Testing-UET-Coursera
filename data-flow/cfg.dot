@@ -1,0 +1,62 @@
+digraph CFG {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    edge [arrowhead=vee];
+
+    // Entry and Constructor
+    entry [label="Entry Point"];
+    constructor [label="Constructor"];
+    set_owner [label="Set owner = msg.sender"];
+    set_balance [label="Set balance = initialBalance"];
+    exit_constructor [label="Exit Constructor"];
+
+    // Withdraw Function
+    withdraw_entry [label="Withdraw Function Entry"];
+    check_owner [label="Check msg.sender != owner"];
+    check_amount_zero [label="Check amountIn <= 0"];
+    check_balance [label="Check amountIn > balance"];
+    check_limit [label="Check amountIn > 3000"];
+    
+    // Return nodes
+    return_access [label="Return \"Access Denied\""];
+    return_invalid [label="Return \"Invalid amount\""];
+    return_insufficient [label="Return \"Insufficient funds\""];
+    return_limit [label="Return \"Limit exceeded\""];
+    update_balance [label="balance -= amountIn"];
+    return_success [label="Return \"Withdraw successful\""];
+    exit_function [label="Exit Function"];
+
+    // Edges
+    entry -> constructor;
+    constructor -> set_owner;
+    set_owner -> set_balance;
+    set_balance -> exit_constructor;
+    exit_constructor -> withdraw_entry;
+    withdraw_entry -> check_owner;
+    
+    // Owner check branch
+    check_owner -> return_access [label="true"];
+    check_owner -> check_amount_zero [label="false"];
+    
+    // Amount zero check branch
+    check_amount_zero -> return_invalid [label="true"];
+    check_amount_zero -> check_balance [label="false"];
+    
+    // Balance check branch
+    check_balance -> return_insufficient [label="true"];
+    check_balance -> check_limit [label="false"];
+    
+    // Limit check branch
+    check_limit -> return_limit [label="true"];
+    check_limit -> update_balance [label="false"];
+    
+    // Success path
+    update_balance -> return_success;
+    return_success -> exit_function;
+    
+    // Return paths
+    return_access -> exit_function;
+    return_invalid -> exit_function;
+    return_insufficient -> exit_function;
+    return_limit -> exit_function;
+} 

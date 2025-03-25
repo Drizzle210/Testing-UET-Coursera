@@ -1,0 +1,43 @@
+Control Flow Graph for WithdrawContract.sol
+
+Entry Point
+    ↓
+Constructor
+    ↓
+    [Set owner = msg.sender]
+    ↓
+    [Set balance = initialBalance]
+    ↓
+Exit Constructor
+    ↓
+Withdraw Function Entry
+    ↓
+    [Check msg.sender != owner]
+    ↓
+    ┌─────────────┴─────────────┐
+    ↓                           ↓
+[Return "Access Denied"]    [Check amountIn <= 0]
+    ↓                           ↓
+    ┌─────────────┴─────────────┐
+    ↓                           ↓
+[Return "Invalid amount"]    [Check amountIn > balance]
+    ↓                           ↓
+    ┌─────────────┴─────────────┐
+    ↓                           ↓
+[Return "Insufficient funds"]    [Check amountIn > 3000]
+    ↓                           ↓
+    ┌─────────────┴─────────────┐
+    ↓                           ↓
+[Return "Limit exceeded"]    [balance -= amountIn]
+    ↓                           ↓
+    └─────────────┬─────────────┘
+                  ↓
+            [Return "Withdraw successful"]
+                  ↓
+            Exit Function
+
+Legend:
+- ↓ represents flow direction
+- [ ] represents operations
+- ┌─┴─┐ represents decision points
+- └─┬─┘ represents merge points 
